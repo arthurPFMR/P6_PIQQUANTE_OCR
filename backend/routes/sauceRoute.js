@@ -3,7 +3,7 @@ const auth = require("../middleware/auth");
 const router = express.Router();
 const multer = require("../middleware/multer-config")
 
-const sauceController = require("../controllers/sauce");
+const sauceController = require("../controllers/sauceCtrl");
 
 // route pour la création d'un objet__________________________________
 router.post("/", auth, multer, sauceController.createSauce);

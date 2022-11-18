@@ -1,10 +1,12 @@
+const server = require("./server")
+
 const express = require("express");
 const app = express();
 const path = require("path")
 const mongoose = require("mongoose");
 
-const sauceRoutes = require("./routes/sauce");
-const userRoutes = require("./routes/user");
+const sauceRoutes = require("./routes/sauceRoute");
+const userRoutes = require("./routes/userRoute");
 
 // connection d'express à mongoDB:
 // cacher ds gitignore?
@@ -35,7 +37,7 @@ app.use(express.json());
 
 app.use("/api/sauces", sauceRoutes);
 app.use("/api/auth", userRoutes);
-app.use("/images", express.static(path.join(__dirname, "image")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
 
