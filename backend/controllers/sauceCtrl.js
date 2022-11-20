@@ -7,7 +7,7 @@ exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
   delete sauceObject._userId;
-  const Sauce = new Sauce({
+  const sauce = new Sauce({
     ...sauceObject,
     _userId: req.auth.userId,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
@@ -74,14 +74,16 @@ exports.deleteSauce = (req, res, next) => {
 
 // récupération un objet uniquement_______________________________________________
 exports.getOneSauce = (req, res, next) => {
+  console.log(req.params.id);
   Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => res.status(200).json(sauce))
+    .then((sauce) => {console.log(sauce);
+      res.status(200).json(sauce)})
     .catch((error) => res.status(404).json({ error }));
 };
 
 // récupération de tout les objets________________________________________________
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
-    .then((sauces) => res.status(200).json(sauces + console.log("ohé")))
+    .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
 };
