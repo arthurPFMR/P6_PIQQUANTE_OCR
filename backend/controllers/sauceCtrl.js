@@ -26,10 +26,10 @@ exports.createSauce = (req, res, next) => {
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file
     ? {
-        ...json.parse(req.body.thing),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`,
+        ...json.parse(req.body.sauce),
+        imageUrl: `
+        ${req.protocol}://${req.get("host")}/images/${req.file.filename}
+        `,
       }
     : { ...req.body };
 
@@ -82,6 +82,6 @@ exports.getOneSauce = (req, res, next) => {
 // récupération de tout les objets________________________________________________
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
-    .then((sauces) => res.status(200).json(sauces))
+    .then((sauces) => res.status(200).json(sauces + console.log("ohé")))
     .catch((error) => res.status(400).json({ error }));
 };
