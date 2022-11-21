@@ -1,20 +1,18 @@
 
 const express = require("express");
-const dotenv = require("dotenv")
+require("dotenv").config()
 const app = express();
 const cors = require('cors');
 const path = require('path');
 const mongoose = require("mongoose");
 
+
 const sauceRoutes = require("./routes/sauceRoute");
 const userRoutes = require("./routes/userRoute");
 
-// connection d'express à mongoDB:
-// cacher ds gitignore?
-const mongoPassword = "lenomdemonchien";
 mongoose
   .connect(
-    `mongodb+srv://albus:${mongoPassword}@clusterpiiquante.eq9kndp.mongodb.net/P6OCR?retryWrites=true&w=majority`,
+    process.env.ACCESS_MONGODB,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
