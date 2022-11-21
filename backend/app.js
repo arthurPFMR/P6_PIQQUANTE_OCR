@@ -1,5 +1,6 @@
 
 const express = require("express");
+const dotenv = require("dotenv")
 const app = express();
 const cors = require('cors');
 const path = require('path');
@@ -22,9 +23,12 @@ mongoose
 app.use(cors());
 app.use(express.json());
 
+app.get('/', function(req, res, next)  {
+  console.log(process.env.TEST_DOT_ENV)
+})
 app.use("/api/sauces", sauceRoutes);
 app.use("/api/auth", userRoutes);
-app.use("/images", express.static(path.join(__dirname, "image")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
 
