@@ -1,7 +1,7 @@
-
 const express = require("express");
 require("dotenv").config()
 const app = express();
+const helmet = require("helmet")
 const cors = require('cors');
 const path = require('path');
 const mongoose = require("mongoose");
@@ -18,6 +18,8 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
+
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))
 app.use(cors());
 app.use(express.json());
 
