@@ -1,3 +1,4 @@
+// IMPORTATION__________________________________________________________________
 const Sauce = require("../models/SauceModel");
 const fs = require("fs");
 
@@ -19,7 +20,7 @@ exports.createSauce = (req, res, next) => {
   });
   sauce
     .save()
-    .then(() => res.status(201).json({ message: "Sauce ajouté !" }))
+    .then(() => res.status(201).json({ message: "Object created" }))
     .catch((error) => {
       res.status(400).json({ error });
     });
@@ -30,9 +31,7 @@ exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file
     ? {
         ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
       }
     : { ...req.body };
 
@@ -40,13 +39,13 @@ exports.modifySauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
-        res.status(401).json({ message: "Unauthorized" });
+        res.status(403).json({ message: "Unauthorized request" });
       } else {
         Sauce.updateOne(
           { _id: req.params.id },
           { ...sauceObject, _id: req.params.id }
         )
-          .then(() => res.status(200).json({ message: "Objet modifié !" }))
+          .then(() => res.status(200).json({ message: "Object modified" }))
           .catch((error) => res.status(401).json({ error }));
       }
     })
@@ -58,13 +57,13 @@ exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       if (sauce.userId != req.auth.userId) {
-        res.status(401).json({ message: "Unauthorized" });
+        res.status(403).json({ message: "Unauthorized request" });
       } else {
         const filename = sauce.imageUrl.split("/images/")[1];
         fs.unlink(`images/${filename}`, () => {
           Sauce.deleteOne({ _id: req.params.id })
             .then(() => {
-              res.status(200).json({ message: "objet supprimé !" });
+              res.status(200).json({ message: "object deleted" });
             })
             .catch((error) => {
               res.status(401).json({ error });

@@ -1,11 +1,13 @@
+// IMPORTATION_______________________________________________________________________
 const Sauce = require("../models/SauceModel");
 
+
+// FONCTION LIKE/DISLIKE_____________________________________________________________
 exports.usersLikeSauce = (req, res, next) => {
   // chercher dans databas:
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
       // AJOUT +1 LIKE________________________________________________________________
-      // si usersLiked false et likes === 1:
       if (!sauce.usersLiked.includes(req.body.userId) && req.body.like === 1) {
         // MAJ Database
         Sauce.updateOne(
@@ -17,11 +19,10 @@ exports.usersLikeSauce = (req, res, next) => {
             $push: { usersLiked: req.body.userId },
           }
         )
-          .then(() => res.status(201).json({ message: "+ 1 like !" }))
+          .then(() => res.status(201).json({ message: "Like added" }))
           .catch((error) => res.status(400).json({ error }));
       }
       // SUPPRIMER 1 LIKE______________________________________________________________
-      // si usersLiked false et likes === 0:
       if (sauce.usersLiked.includes(req.body.userId) && req.body.like === 0) {
         // MAJ Database
         Sauce.updateOne(
@@ -32,7 +33,7 @@ exports.usersLikeSauce = (req, res, next) => {
             $pull: { usersLiked: req.body.userId },
           }
         )
-          .then(() => res.status(201).json({ message: "like à 0 !" }))
+          .then(() => res.status(201).json({ message: "Like deleted" }))
           .catch((error) => res.status(400).json({ error }));
       }
       // AJOUT 1 DISLIKE_______________________________________________________________
@@ -45,7 +46,7 @@ exports.usersLikeSauce = (req, res, next) => {
             $push: { usersDisliked: req.body.userId },
           }
         )
-          .then(() => res.status(201).json({ message: "+ 1 dislike !" }))
+          .then(() => res.status(201).json({ message: "Dislike added" }))
           .catch((error) => res.status(400).json({ error }));
       }
       // SUPPRIMER 1 DISLIKE___________________________________________________________
@@ -58,7 +59,7 @@ exports.usersLikeSauce = (req, res, next) => {
             $pull: { usersDisliked: req.body.userId },
           }
         )
-          .then(() => res.status(201).json({ message: "- 1 dislike !" }))
+          .then(() => res.status(201).json({ message: "Dislike deleted" }))
           .catch((error) => res.status(400).json({ error }));
       }
     })

@@ -1,9 +1,11 @@
+// IMPORTATION_____________________________________________________________
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/UserModel");
 
-// controller d'inscription
+
+// FONCTIONS SIGNUP________________________________________________________
 exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
@@ -14,13 +16,13 @@ exports.signup = (req, res, next) => {
       });
       user
         .save()
-        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+        .then(() => res.status(201).json({ message: "User created" }))
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(400).json({ error }));
 };
 
-// controller de connection
+// FONCTIONS LOGIN_________________________________________________________
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {

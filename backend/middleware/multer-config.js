@@ -1,11 +1,14 @@
+// IMPORTATION________________________________________________
 const multer = require("multer")
 
+// CREATION DU MIME_TYPES_____________________________________
 const MIME_TYPES = {
     "image/jpg": "jpg",
     "image/jpeg": "jpeg",
     "image/png": "png",
 }
 
+// FONCTION STORAGE___________________________________________
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
     callback(null, "images")
