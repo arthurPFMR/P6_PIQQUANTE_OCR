@@ -11,10 +11,6 @@ module.exports = (req, res, next) => {
     }
 }
 
-
-// chemin pour les restrictions de la création de mot de passe:
-// const { default: isStrongPassword } = require("validator/lib/isStrongPassword");
-
 // Réstrictions:
 // minLength: 5,
 // minLowercase: 1,

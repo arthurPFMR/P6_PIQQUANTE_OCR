@@ -10,6 +10,3 @@ module.exports = (req, res, next) => {
         next()
     }
 }
-
-// chemin des restrictions pour l'email:
-// const { default: isEmail } = require("validator/lib/isEmail")
