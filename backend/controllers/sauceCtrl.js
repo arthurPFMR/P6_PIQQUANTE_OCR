@@ -1,39 +1,39 @@
 // IMPORTATION__________________________________________________________________
 const Sauce = require("../models/SauceModel");
-const fs = require("fs");
+const fs = require("fs");// permet d'intéragir avec les fichier du système
 
-// STOCKAGE DE LA LOGIQUE METIER:
-// création objet________________________________________________________________
+// 
+// STOCKAGE DE LA LOGIQUE METIER________________________________________________
 exports.createSauce = (req, res, next) => {
-  // transformation du corp de la requète (JSON=>JS):
-  const sauceObject = JSON.parse(req.body.sauce);
-  // suppression du champ _id (on utilisera celui générer par la database):
-  delete sauceObject._id;
-  // suppression du champ _userId afin d'utiliser celui du token (sécurité):
-  delete sauceObject._userId;
+  const sauceObject = JSON.parse(req.body.sauce);// transformation du corp de la requête (JSON=>JS)
+  
+  delete sauceObject._id;// suppression du champ _id (on utilisera celui générer par la BD)
+  delete sauceObject._userId;// suppression du champ _userId afin d'utiliser celui du token (sécurité)
+  
   const sauce = new Sauce({
     ...sauceObject,
-    userId: req.auth.userId,
+    userId: req.auth.userId,// créat° de l'ID via token du middleware d'auth
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
-    }`,
+    }`,// création de l'URL l'image: protocol=HTTP+Host=4200+Chemin=dossier images + nom du fichier
   });
+  
   sauce
     .save()
-    .then(() => res.status(201).json({ message: "Object created" }))
+    .then(() => res.status(201).json({ message: "Object created" }))// 201 = créat°
     .catch((error) => {
-      res.status(400).json({ error });
+      res.status(400).json({ error });// 400 = page introuvable, problème avec l'adresse
     });
 };
 
-// modification objet____________________________________________________________
 exports.modifySauce = (req, res, next) => {
+  // Vérifie si req.file (objet) existe:
   const sauceObject = req.file
     ? {
-        ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+        ...JSON.parse(req.body.sauce),// récupère le body en parsant la chaîne de caractère
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,// création de l'Url de l'image
       }
-    : { ...req.body };
+    : { ...req.body };// si pas d'objet transmit on récupère l'objet ds le body de la requête
 
   delete sauceObject._userId;
   Sauce.findOne({ _id: req.params.id })
@@ -46,42 +46,42 @@ exports.modifySauce = (req, res, next) => {
           { ...sauceObject, _id: req.params.id }
         )
           .then(() => res.status(200).json({ message: "Object modified" }))
-          .catch((error) => res.status(401).json({ error }));
+          .catch((error) => res.status(401).json({ error }));// 401= user non authorized
       }
     })
     .catch((error) => res.status(400).json({ error }));
 };
 
-// suppression objet_____________________________________________________________
 exports.deleteSauce = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
+  Sauce.findOne({ _id: req.params.id })  // récupérat° de l'objet dans la BD 
+  // vérifie si bon user:
     .then((sauce) => {
-      if (sauce.userId != req.auth.userId) {
-        res.status(403).json({ message: "Unauthorized request" });
+      if (sauce.userId != req.auth.userId) { 
+        res.status(403).json({ message: "Unauthorized request" });// 403 = user n'a pas le droit d'accés
       } else {
         const filename = sauce.imageUrl.split("/images/")[1];
-        fs.unlink(`images/${filename}`, () => {
+
+        fs.unlink(`images/${filename}`, () => {// méthode fs.unlink() utilisée pour supprimer un fichier
           Sauce.deleteOne({ _id: req.params.id })
+
             .then(() => {
               res.status(200).json({ message: "object deleted" });
             })
             .catch((error) => {
-              res.status(401).json({ error });
-            });
+              res.status(401).json({ error });// 401 = requête non effectuée,                                             
+            });//                        manque info d'authentificat° valides
         });
       }
     })
-    .catch((error) => res.status(500).json({ error }));
-};
+    .catch((error) => res.status(500).json({ error }));// 500 = requête envoyée par le navigateur non traitée 
+};//                                                pour une raison qui n'a pas pu être identifiée(pb server)
 
-// récupération objet unique_____________________________________________________
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => res.status(200).json(sauce))
-    .catch((error) => res.status(404).json({ error }));
+    .catch((error) => res.status(404).json({ error }));// 404= ressource indisponible
 };
 
-// récupération de tout les objets_______________________________________________
 exports.getAllSauces = (req, res, next) => {
   Sauce.find()
     .then((sauces) => res.status(200).json(sauces))

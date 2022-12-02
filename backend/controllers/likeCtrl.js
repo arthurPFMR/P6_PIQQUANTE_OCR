@@ -4,8 +4,7 @@ const Sauce = require("../models/SauceModel");
 
 // FONCTION LIKE/DISLIKE_____________________________________________________________
 exports.usersLikeSauce = (req, res, next) => {
-  // chercher dans databas:
-  Sauce.findOne({ _id: req.params.id })
+  Sauce.findOne({ _id: req.params.id })// chercher dans la BD:
     .then((sauce) => {
       // AJOUT +1 LIKE________________________________________________________________
       if (!sauce.usersLiked.includes(req.body.userId) && req.body.like === 1) {

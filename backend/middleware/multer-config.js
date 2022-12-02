@@ -12,12 +12,14 @@ const MIME_TYPES = {
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
     callback(null, "images")
-},
-filename: (req, file, callback) => {
-    const name = file.originalname.split(" ").join("_");
-    const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + "." + extension)
+},// multer enregistre les fichiers dans le diskSorage dossier images
+
+    filename: (req, file, callback) => {
+        const name = file.originalname.split(" ").join("_");// indique à multer d'utiliser le nom d'origine
+        const extension = MIME_TYPES[file.mimetype];// donne les extension de fichier appropriée
+        callback(null, name + Date.now() + "." + extension)// nomination final du fichier pour la BD
 }
 })
 
-module.exports = multer({ storage }).single("image");
+module.exports = multer({ storage }).single("image");// exporte multer configuré avec la constante storage
+                                                    // télécharge uniquement les fichiers image
