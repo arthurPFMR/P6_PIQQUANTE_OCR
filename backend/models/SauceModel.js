@@ -1,8 +1,10 @@
 // IMPORTATION_____________________________________________
 const mongoose = require("mongoose");
+const mongooseError = require("mongoose-errors")
 
+mongoose.plugin(mongooseError);
 // MODELE SAUCE____________________________________________
-const sauceSchema = mongoose.Schema({
+const sauceSchema = new mongoose.Schema({
   userId: 
   { 
     type: String, 
@@ -65,6 +67,8 @@ const sauceSchema = mongoose.Schema({
     type: [String] 
   },
 });
+
+sauceSchema.plugin(mongooseError);
 
 // EXPORTATION______________________________________________
 module.exports = mongoose.model("Sauce", sauceSchema);
