@@ -1,8 +1,11 @@
 // IMPORTATION_____________________________________________
 const mongoose = require("mongoose");
+const mongooseError = require("mongoose-errors");// permet d'intercepter les erreur 
+                                                // de la BD pour en faire des erreur HTTP
+mongoose.plugin(mongooseError);
 
 // MODELE SAUCE____________________________________________
-const sauceSchema = mongoose.Schema({
+const sauceSchema = new mongoose.Schema({
   userId: 
   { 
     type: String, 
@@ -66,5 +69,8 @@ const sauceSchema = mongoose.Schema({
   },
 });
 
+sauceSchema.plugin(mongooseError);
+
 // EXPORTATION______________________________________________
 module.exports = mongoose.model("Sauce", sauceSchema);
+

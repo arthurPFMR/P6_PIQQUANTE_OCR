@@ -69,7 +69,7 @@ exports.deleteSauce = (req, res, next) => {
             })
             .catch((error) => {
               res.status(401).json({ error });// 401 = requête non effectuée,                                             
-            });//                        manque info d'authentificat° valides
+            });//                                manque info d'authentificat° valides
         });
       }
     })
